@@ -1,6 +1,7 @@
-### SOLID Design Principle ###
 
-The [pdf](resources\principles_and_patterns.pdf) named "Design Principles and Design Patterns" by Rober C. Martin is the best introduction to the concept. It does not have a Single Respoinsiblity in it.
+# SOLID Design Principle
+
+The [pdf](assets\principles_and_patterns.pdf) named "Design Principles and Design Patterns" by Rober C. Martin is the best introduction to the concept. It does not have a Single Respoinsiblity in it.
 
 + **S**ingle Responsibility 
 + **O**pen Close principle
@@ -12,6 +13,7 @@ Checkout the links for the more detalied examples.
 The specific is very hard to pin point. Often time, we can apply most of the principles, in similar or one modification, strategy pattern. However, it is important to keep in mind, if we have satisfied all of SOLID principles. 
 
 1. #### Single Responsibility Principle ####
+
     + [Source one](https://dotnetcodr.com/2013/08/12/solid-design-principles-in-net-the-single-responsibility-principle/)
     + [Source two, same guy](https://dotnetcodr.com/2015/04/27/solid-principles-in-net-revisited-part-2-single-responsibility-principle/)  
     Class or method should be responsibile for one thing. Think it this way, we do not want to change class or method to change implemenation details. 
@@ -39,6 +41,7 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
         }
     }
     ```
+
     Problem
     + what if we need to change money charging from credit card to cash or online coupons, bitcoins
     + what if sending notification is not necessary or we are sending from different email client.
@@ -49,11 +52,13 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
     **Solution**: Separate `ChargeMoney` and `SendEmailNotification` methods to interface and implement their method. The details will be carried by whoever is handling the details charging or sending notification. We should not worry about it.
 
 1. #### Open closed principle ####
+
     [good article](http://joelabrahamsson.com/a-simple-example-of-the-openclosed-principle/)
 
-    Open for extension, closed for modification. We do not want the code that has business logic to be modified all the time. We can change the behavior without modifying the original code. Abstraction of `SendingEmail` or `PaymentModule` with **interface** or **abstract** class, we do not have to worry about particular detail of payments or sending email. If in a future, we want to change or add new system, we can simply point to which method we want to use. We can follow this principle using polymorphism or applying interface.   
+    Open for extension, closed for modification. We do not want the code that has business logic to be modified all the time. We can change the behavior without modifying the original code. Abstraction of `SendingEmail` or `PaymentModule` with **interface** or **abstract** class, we do not have to worry about particular detail of payments or sending email. If in a future, we want to change or add new system, we can simply point to which method we want to use. We can follow this principle using polymorphism or applying interface.  
 
-    Open Closed principle and Single Responsibility principle are very closely related in that both advocate thining the class on method to focus on one particular use case. They don't want classes or methods to be doing too many things in one particular place.   
+    Open Closed principle and Single Responsibility principle are very closely related in that both advocate thining the class on method to focus on one particular use case. They don't want classes or methods to be doing too many things in one particular place.
+
     ```csharp
     /// anti-pattern
     public double Area(object[] shapes)
@@ -81,7 +86,7 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
     {
         public abstract double Area();
     }
-    
+
     public class Rectangle : Shape
     {
         public double Width { get; set; }
@@ -127,6 +132,7 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
     + no client should be forced to depend on methods it does not use. Reduce interface to smallest required implementation. Imagine you need to implement just some of the interface methods but not all. In this situation, interface, is not following this principle.
 
     + Demo
+
         ```csharp
         //suppose store sells two producsts DVD and BluRay
         public interface IProduct 
@@ -166,7 +172,9 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
         }
         public class TShirt: IProduct {...}
         ```
+
 1. #### Dependency Inversion Principle (DIP) ####
+
     + [This article has lots of graphs](http://joelabrahamsson.com/inversion-of-control-an-introduction-with-examples-in-net/)
     + [Martin Fowler on IoC Containers](https://martinfowler.com/articles/injection.html)
     + helps to decouple your code by ensuring that you depend on abstractions rather than concrete implementations. Dependecy Injection(DI) is an implementation of this principle.
@@ -175,15 +183,18 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
     + Inversion of Control (IoC) : meant a programming style where a framework or runtime controlled the programme flow. Now, all this terms are interchangeably used.
     + > The frequency of the 'new' keyword in your code is a rough estimate of the degree of coupling in your object structure.
     + Types of DI
-        - Constructor injection
+        + Constructor injection
+
             ```csharp
             private IProductRepository _productRepository;
             public ProductService(IProductRepository productRepository){
                 _productRepository = productRepository;
             }
             ```
-        - Property/Setter Injection
+
+        + Property/Setter Injection
             + used when your class had a good local default for a dependency but still want to enable clients to override that default.
+
             ```csharp
             //complete version; does not need to be this complex
             public IPRoductRepository ProductRepository
@@ -204,8 +215,10 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
                 }
             }
             ```
-        - Method injection
+
+        + Method injection
             + used when we can to ensure that we can inject a different implementation every time the dependency is used
+
             ```csharp
             public IEnumerable<Product> GetProducts(IProductionDiscountStrategy productDiscount)
             {
@@ -217,22 +230,15 @@ The specific is very hard to pin point. Often time, we can apply most of the pri
                 return productsFromDataStore;
             }
             ```
-        - ambient context
+
+        + ambient context
             + need more explanation here. However, constructor injection is preferred than this.
-        
     + Factory pattern (static, abstract, concrete) is anti-pattern way of implementing DI
     + Service Locator
-        - serve instances of services when consumers request them.
-        - most common implementation of the pattern introduces a static factory
-        - anti-pattern because most client class won't know about dependency
-        - Martin Fowler
+        + serve instances of services when consumers request them.
+        + most common implementation of the pattern introduces a static factory
+        + anti-pattern because most client class won't know about dependency
+        + Martin Fowler
         > The key difference is that with a Service Locator every user of a service has a dependency so the locator. The locator can hide dependecis to other implementations, but you do need to see the locator. So the decision between locator and injector depends on whether that depedency is a problem.
-        - Also, we can use both on technqiue in same project, depending on the class.
+        + Also, we can use both on technqiue in same project, depending on the class.
     + there seems to be confusion regarding the terms: Service Locator, IoC Container, looks like it mean same!
-
-
-
-
-
-
-
